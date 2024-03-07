@@ -1,11 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:10-alpine'
-        }
-    }
+    agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -30,7 +27,12 @@ pipeline {
     }
 
     post {
-        
+        success {
+            echo 'Pipeline ejecutado exitosamente'
+        }
+
+        failure {
+            echo 'Pipeline ha fallado'
+        }
     }
 }
-
