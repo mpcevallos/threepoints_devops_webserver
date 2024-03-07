@@ -19,7 +19,7 @@ pipeline {
                         installationName: 'SonarQube', // Nombre de la instalación de SonarQube en Jenkins
                         projectKey: 'sonarqube', // Clave del proyecto en SonarQube
                         projectName: 'Proyecto SonarQube', // Nombre del proyecto en SonarQube
-                        scannerHome: '${scannerHome}/bin/sonar-scanner' // Ruta al directorio del escáner de SonarQube
+                        scannerHome: '/bin/sonar-scanner' // Ruta al directorio del escáner de SonarQube
                     )
                     
                     // Ejecutar Quality Gate 
