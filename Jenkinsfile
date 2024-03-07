@@ -2,17 +2,16 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
-                // Realiza un checkout del repositorio GitHub
-                checkout scm
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/master']],
+                          userRemoteConfigs: [[credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git']]])
             }
         }
 
         stage('Pruebas de SAST') {
             steps {
-                // Ejecuta pruebas de SAST simulada con echo
                 script {
                     echo 'Ejecución de pruebas de SAST'
                 }
@@ -21,22 +20,17 @@ pipeline {
 
         stage('Configurar archivo') {
             steps {
-                // Crea un archivo credentials.ini con las credenciales de GitHub y lo archiva como artefacto
                 script {
-                    // Utiliza withCredentials para manejar las credenciales
-                    withCredentials([usernamePassword(credentialsId: 'git-threepoints-github', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                        // Crea el archivo credentials.ini
-                        writeFile file: 'credentials.ini', text: "[credentials]\nuser=${USERNAME}\npassword=${PASSWORD}"
+                    withCredentials([sshUserPrivateKey(credentialsId: 'git-threepoints-github', keyFileVariable: 'KEY_FILE', passphraseVariable: '', usernameVariable: 'USERNAME')]) {
+                        sh 'echo "[credentials]" > credentials.ini'
+                        sh 'echo "user=${USERNAME}" >> credentials.ini'
+                        sh 'echo "password=${KEY_FILE}" >> credentials.ini'
                     }
-
-                    // Archiva el archivo como artefacto
-                    archiveArtifacts artifacts: 'credentials.ini', onlyIfSuccessful: true
                 }
             }
         }
 
         stage('Build') {
-            // Construye la imagen de Docker con el archivo credentials.ini archivado como artefacto
             steps {
                 script {
                     sh 'docker build -t devops_threepoints .'
@@ -46,11 +40,10 @@ pipeline {
     }
 
     post {
-        // Resultado de pipeline exitoso
         success {
             echo 'Pipeline ejecutado exitosamente'
         }
-        // Resultado de pipeline fallido
+
         failure {
             echo 'Pipeline ha fallado'
         }
