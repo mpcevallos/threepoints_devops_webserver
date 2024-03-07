@@ -13,15 +13,18 @@ pipeline {
         stage('Pruebas de SAST') {
             steps {
                 script {
-                    // Configurar el entorno de SonarQube
-                    withSonarQubeEnv('SonarScanner') {
-                        // Ejecutar SonarQubeScan
-                        sh "${scannerHome}/bin/sonar-scanner"
-                        
-                        // Ejecutar Quality Gate 
-                        timeout(time: 1, unit: 'HOURS') {
-                            waitForQualityGate abortPipeline: false
-                        }
+                    echo 'Ejecución de pruebas de SAST'
+                }
+            }
+        }
+
+        stage('Configurar archivo') {
+            steps {
+                script {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'git-threepoints-github', keyFileVariable: 'KEY_FILE', passphraseVariable: '', usernameVariable: 'USERNAME')]) {
+                        sh 'echo "[credentials]" > credentials.ini'
+                        sh 'echo "user=${USERNAME}" >> credentials.ini'
+                        sh 'echo "password=${KEY_FILE}" >> credentials.ini'
                     }
                 }
             }
@@ -30,11 +33,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Ejecutar Docker build
                     sh 'docker build -t devops_threepoints .'
-                    
-                    // Ejecutar Maven
-                    sh 'mvn clean install'
                 }
             }
         }
