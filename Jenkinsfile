@@ -24,7 +24,7 @@ pipeline {
                 // Crea un archivo credentials.ini con las credenciales de GitHub y lo archiva como artefacto
                 script {
                     // Utiliza withCredentials para manejar las credenciales
-                    withCredentials([usernamePassword(credentialsId: 'Credentials_Threepoints', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'git-threepoints-github', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         // Crea el archivo credentials.ini
                         writeFile file: 'credentials.ini', text: "[credentials]\nuser=${USERNAME}\npassword=${PASSWORD}"
                     }
