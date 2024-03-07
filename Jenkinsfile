@@ -11,24 +11,21 @@ pipeline {
         }
 
         stage('Pruebas de SAST') {
-            steps {
-                script {
-                    // Ejecutar SonarQubeScan
-                    sonarqube(
-                        credentialsId: 'sonar-token', // ID de las credenciales de SonarQube
-                        installationName: 'SonarQube', // Nombre de la instalación de SonarQube en Jenkins
-                        projectKey: 'sonarqube', // Clave del proyecto en SonarQube
-                        projectName: 'Proyecto SonarQube', // Nombre del proyecto en SonarQube
-                        scannerHome: '/bin/sonar-scanner' // Ruta al directorio del escáner de SonarQube
-                    )
-                    
-                    // Ejecutar Quality Gate 
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitForQualityGate abortPipeline: false
-                    }
+    steps {
+        script {
+            // Configurar el entorno de SonarQube
+            withSonarQubeEnv('SonarQube') {
+                // Ejecutar SonarQubeScan
+                sh "${scannerHome}/bin/sonar-scanner"
+                
+                // Ejecutar Quality Gate 
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: false
                 }
             }
         }
+    }
+}
 
         stage('Build') {
             steps {
@@ -49,3 +46,4 @@ pipeline {
         }
     }
 }
+                    
