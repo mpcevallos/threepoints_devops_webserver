@@ -4,28 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/master']],
-                          userRemoteConfigs: [[credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git']]])
+                checkout scm
             }
         }
 
         stage('Pruebas de SAST') {
-            steps {
-                script {
-                    echo 'Ejecución de pruebas de SAST'
-                }
-            }
-        }
 
-        stage('Configurar archivo') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'git-threepoints-github', keyFileVariable: 'KEY_FILE', passphraseVariable: '', usernameVariable: 'USERNAME')]) {
-                        sh 'echo "[credentials]" > credentials.ini'
-                        sh 'echo "user=${USERNAME}" >> credentials.ini'
-                        sh 'echo "password=${KEY_FILE}" >> credentials.ini'
-                    }
+                    // Ejecutar SonarQubeScan
+                    sonarqube(
+                        credentialsId: 'sonar-token', 
+                        installationName: 'SonarScanner', 
+                        projectKey: 'node-app-sonarqubescan',
+                        projectName: 'App Node', 
+                        scannerHome: '${scannerHome}/bin/sonar-scanner'
+                    )
+                    
+                   timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: false
                 }
             }
         }
