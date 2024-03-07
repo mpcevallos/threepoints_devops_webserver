@@ -9,7 +9,6 @@ pipeline {
         }
 
         stage('Pruebas de SAST') {
-
             steps {
                 script {
                     // Ejecutar SonarQubeScan
@@ -21,8 +20,9 @@ pipeline {
                         scannerHome: '${scannerHome}/bin/sonar-scanner'
                     )
                     
-                   timeout(time: 1, unit: 'HOURS') {
+                    timeout(time: 1, unit: 'HOURS') {
                         waitForQualityGate abortPipeline: false
+                    }
                 }
             }
         }
