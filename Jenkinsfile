@@ -14,7 +14,7 @@ pipeline {
     steps {
         script {
             // Configurar el entorno de SonarQube
-            withSonarQubeEnv('SonarQube') {
+            withSonarQubeEnv('SonarScanner') {
                 // Ejecutar SonarQubeScan
                 sh "${scannerHome}/bin/sonar-scanner"
                 
@@ -46,4 +46,3 @@ pipeline {
         }
     }
 }
-                    
