@@ -17,8 +17,8 @@ pipeline {
                     sonarqube(
                         credentialsId: 'sonar-token', // ID de las credenciales de SonarQube
                         installationName: 'SonarQube', // Nombre de la instalación de SonarQube en Jenkins
-                        projectKey: 'sast-sonarqube', // Clave del proyecto en SonarQube
-                        projectName: 'SonarQube SAST', // Nombre del proyecto en SonarQube
+                        projectKey: 'sonarqube', // Clave del proyecto en SonarQube
+                        projectName: 'Proyecto SonarQube', // Nombre del proyecto en SonarQube
                         scannerHome: '${scannerHome}/bin/sonar-scanner' // Ruta al directorio del escáner de SonarQube
                     )
                     
