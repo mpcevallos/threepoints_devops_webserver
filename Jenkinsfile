@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/master']],
+                          userRemoteConfigs: [[credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git']]])
             }
         }
 
@@ -13,13 +15,14 @@ pipeline {
                 script {
                     // Ejecutar SonarQubeScan
                     sonarqube(
-                        credentialsId: 'sonar-token', 
-                        installationName: 'SonarScanner', 
-                        projectKey: 'node-app-sonarqubescan',
-                        projectName: 'App Node', 
-                        scannerHome: '${scannerHome}/bin/sonar-scanner'
+                        credentialsId: 'sonar-token', // ID de las credenciales de SonarQube
+                        installationName: 'SonarQube', // Nombre de la instalación de SonarQube en Jenkins
+                        projectKey: 'sast-sonarqube', // Clave del proyecto en SonarQube
+                        projectName: 'SonarQube SAST', // Nombre del proyecto en SonarQube
+                        scannerHome: '${scannerHome}/bin/sonar-scanner' // Ruta al directorio del escáner de SonarQube
                     )
                     
+                    // Ejecutar Quality Gate 
                     timeout(time: 1, unit: 'HOURS') {
                         waitForQualityGate abortPipeline: false
                     }
