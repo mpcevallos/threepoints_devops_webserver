@@ -14,9 +14,16 @@ pipeline {
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner'
-                    withSonarQubeEnv() {
-                        sh ''' ${scannerHome}/bin/sonar-scanner" -Dsonar.url=http://10.0.2.15:9000/
- -Dsonar.login=squ_486714c6dafa6ce689d33b560ba42ccb6b6e2037 -Dsonar.projectName=threepoints_devops_webserver -Dsonar.projectKey=sonarqube -Dsonar.sources=. -Dsonar.tests=. -Dsonar.exclusions=**/node_modules/** -Dsonar.coverage.exclusions=**/node_modules/**'''
+                    withSonarQubeEnv('SonarScanner') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.url=http://10.0.2.15:9000/ \
+                            -Dsonar.login=squ_486714c6dafa6ce689d33b560ba42ccb6b6e2037 \
+                            -Dsonar.projectName=threepoints_devops_webserver \
+                            -Dsonar.projectKey=sonarqube \
+                            -Dsonar.sources=. \
+                            -Dsonar.tests=. \
+                            -Dsonar.exclusions=**/node_modules/** \
+                            -Dsonar.coverage.exclusions=**/node_modules/**"
                     }
                 }
                 // Ejecutar Quality Gate 
