@@ -8,7 +8,7 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
+       stage('Pruebas de SAST') {
     steps {
         script {
             def scannerHome = tool 'sonar-scanner'
@@ -27,7 +27,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t ${IMAGE_NAME}:${VERSION} .'
+                sh 'docker build -t devops_threepoints .'
             }
         }
     }
