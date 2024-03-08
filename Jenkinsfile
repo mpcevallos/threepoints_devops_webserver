@@ -11,7 +11,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv() {
-                    sh '${SONAR_RUNNER_HOME}/bin/sonar-scanner -Dsonar.host.url=http://10.0.2.15:9000/ -Dsonar.login=squ_486714c6dafa6ce689d33b560ba42ccb6b6e2037 -Dsonar.projectKey=sonarqube -Dsonar.sources=. -Dsonar.tests=. -Dsonar.exclusions=**/node_modules/** -Dsonar.coverage.exclusions=**/node_modules/**'
+                    sh '${SONAR_RUNNER_HOME}/bin/sonar-scanner -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_LOGIN} -Dsonar.projectKey=${PROJECT_KEY} -Dsonar.sources=. -Dsonar.tests=. -Dsonar.projectVersion=${VERSION}'
                 }
                 timeout(time: 1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: false
@@ -21,7 +21,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t threepoints_devops_webserver .'
+                sh 'docker build -t ${IMAGE_NAME}:${VERSION} .'
             }
         }
     }
