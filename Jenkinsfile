@@ -6,26 +6,22 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', 
                           branches: [[name: '*/master']],
-                          userRemoteConfigs: [[credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git']]])
+                          userRemoteConfigs: [[credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git']])
             }
         }
 
-        stage('Pruebas de SAST') {
+        stage('SonarQube Analysis') {
             steps {
                 script {
-                    echo 'Ejecución de pruebas de SAST'
-                }
-            }
-        }
-
-        stage('Configurar archivo') {
-            steps {
-                script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'git-threepoints-github', keyFileVariable: 'KEY_FILE', passphraseVariable: '', usernameVariable: 'USERNAME')]) {
-                        sh 'echo "[credentials]" > credentials.ini'
-                        sh 'echo "user=${USERNAME}" >> credentials.ini'
-                        sh 'echo "password=${KEY_FILE}" >> credentials.ini'
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv() {
+                        sh ''' ${scannerHome}/bin/sonar-scanner" -Dsonar.url=http://10.0.2.15:9000/
+ -Dsonar.login=squ_486714c6dafa6ce689d33b560ba42ccb6b6e2037 -Dsonar.projectName=threepoints_devops_webserver -Dsonar.projectKey=sonarqube -Dsonar.sources=. -Dsonar.tests=. -Dsonar.exclusions=**/node_modules/** -Dsonar.coverage.exclusions=**/node_modules/**'''
                     }
+                }
+                // Ejecutar Quality Gate 
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: false
                 }
             }
         }
