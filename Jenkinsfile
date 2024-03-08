@@ -27,7 +27,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t devops_threepoints .'
+                sh 'docker build -t devops_threepoints:latest .'
             }
         }
     }
