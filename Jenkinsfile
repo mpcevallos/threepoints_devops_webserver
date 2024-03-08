@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONAR_RUNNER_HOME = tool 'SonarScanner'
-        SONAR_HOST_URL = 'http://10.0.2.15:9000/'
+        SONAR_HOST_URL = 'http://localhost:9000/'
         SONAR_LOGIN = 'squ_486714c6dafa6ce689d33b560ba42ccb6b6e2037'
         PROJECT_KEY = 'sonarqube'
         VERSION = '1.0'
