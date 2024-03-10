@@ -7,8 +7,9 @@ pipeline {
         stage('Checkout') {
         steps {
             script {
-                def branchName = env.BRANCH_NAME
-                echo "Checking out branch: ${branchName}"
+                // Obtiene el nombre de la rama actual de Git
+                def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                echo "branchName: ${branchName}"
                 git branch: branchName, credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git'
             }
         }
