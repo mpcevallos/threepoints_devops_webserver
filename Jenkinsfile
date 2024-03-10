@@ -1,3 +1,5 @@
+@Library('threepoints-sharedlib@main') _
+
 pipeline {
     agent any
 
