@@ -5,10 +5,15 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git branch: 'master', credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git'
+        steps {
+            script {
+                def branchName = env.BRANCH_NAME
+                echo "Checking out branch: ${branchName}"
+                git branch: branchName, credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git'
             }
         }
+    }
+}
 
         stage('Pruebas de SAST') {
             steps {
