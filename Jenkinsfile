@@ -10,12 +10,14 @@ pipeline {
             }
         }
 
-       stage('Pruebas de SAST') {
-    steps {
-            // Utilizamos la funcion sonarAnalysis
-            scriptLibs.sonarAnalysis(abortPipeline: false)
-    }
-}
+        stage('Pruebas de SAST') {
+            steps {
+                script {
+                    // Utilizamos la función sonarAnalysis
+                    scriptLibs.sonarAnalysis(abortPipeline: false)
+                }
+            }
+        }
 
         stage('Build') {
             steps {
@@ -33,4 +35,3 @@ pipeline {
         }
     }
 }
-
