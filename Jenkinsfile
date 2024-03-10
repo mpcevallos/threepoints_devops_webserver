@@ -5,21 +5,23 @@ pipeline {
 
     stages {
         stage('Checkout') {
-        steps {
-            script {
-                // Obtiene el nombre de la rama actual de Git
-                def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                echo "branchName: ${branchName}"
-                git branch: branchName, credentialsId: 'git-threepoints-github', url: 'https://github.com/mpcevallos/threepoints_devops_webserver.git'
+            steps {
+                script {
+                    // Especifica la URL del repositorio al clonar
+                    def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true, 
+                                        displayName: 'Get Branch Name', 
+                                        env: [GIT_TERMINAL_PROMPT: '0', GIT_ASKPASS: 'echo', GIT_SSH_COMMAND: 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'])?.trim()
+                    
+                    echo "branchName: ${branchName}"
+                }
             }
         }
-    }
 
         stage('Pruebas de SAST') {
             steps {
                 script {
                     // Llamada a la función desde la biblioteca compartida
-                    sonarAnalysis(abortPipeline: false, branchName: env.master)
+                    sonarAnalysis(abortPipeline: false, branchName: env.BRANCH_NAME)
                 }
             }
         }
