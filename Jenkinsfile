@@ -1,4 +1,4 @@
-@Library('threepoints-sharedlib') _
+@Library('threepoints-sharedlib@Default version') _
 
 pipeline {
     agent any
