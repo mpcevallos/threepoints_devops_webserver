@@ -1,5 +1,3 @@
-@Library('threepoints-sharedlib@main') _
-
 pipeline {
     agent any
 
@@ -7,11 +5,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Especifica la URL del repositorio al clonar
-                    def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true, 
-                                        displayName: 'Get Branch Name', 
-                                        env: [GIT_TERMINAL_PROMPT: '0', GIT_ASKPASS: 'echo', GIT_SSH_COMMAND: 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'])?.trim()
-                    
+                    // Accede al nombre de la rama directamente desde la variable de entorno
+                    def branchName = env.BRANCH_NAME
                     echo "branchName: ${branchName}"
                 }
             }
@@ -21,7 +16,7 @@ pipeline {
             steps {
                 script {
                     // Llamada a la función desde la biblioteca compartida
-                    sonarAnalysis(abortPipeline: false, branchName: 'master')
+                    sonarAnalysis(abortPipeline: false, branchName: env.BRANCH_NAME)
                 }
             }
         }
