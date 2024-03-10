@@ -12,10 +12,8 @@ pipeline {
 
        stage('Pruebas de SAST') {
     steps {
-        script {
             // Utilizamos la funcion sonarAnalysis
             scriptLibs.sonarAnalysis(abortPipeline: false)
-        }
     }
 }
 
