@@ -1,5 +1,7 @@
 @Library('threepoints-sharedlib@main') _
 
+import com.threepoints.sharedlib.ScriptLibs
+
 pipeline {
     agent any
 
@@ -13,6 +15,9 @@ pipeline {
         stage('Pruebas de SAST') {
             steps {
                 script {
+                    // Importamos la biblioteca
+                    def scriptLibs = new ScriptLibs()
+                    // Utilizamos la función sonarAnalysis
                     scriptLibs.sonarAnalysis(abortPipeline: false)
                 }
             }
