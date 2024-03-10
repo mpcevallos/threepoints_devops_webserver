@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
                     // Llamada a la función desde la biblioteca compartida
-                    sonarAnalysis(false)
+                    sonarAnalysis(abortPipeline: false, branchName: env.BRANCH_NAME)
                 }
             }
         }
