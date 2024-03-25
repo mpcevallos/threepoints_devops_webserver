@@ -18,8 +18,6 @@ jobs:
         output: credentials.ini
     - name: Pruebas de SAST
       run: echo "Ejecución de pruebas de SAST"
-    - name: Verificar contenido del directorio
-      run: ls -l /
     - name: Crear el archivo de credenciales
       run: |
         export USERNAME=${USERNAME}
@@ -31,6 +29,8 @@ jobs:
         git config --global user.name "mpcevallos"
         git add credentials.ini
         git commit -m "Add credentials.ini"
+    - name: Verificar contenido del directorio
+      run: ls -l /
     - name: Git Push de los cambios
       uses: ad-m/github-push-action@master
       with:
