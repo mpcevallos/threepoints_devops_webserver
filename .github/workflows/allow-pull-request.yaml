@@ -4,9 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize]
     branches:
-      - 'master'
-      - 'feature*'
-      - 'hotfix*'
+      - 'feature-*'
+      - 'hotfix-*'
 
 jobs:
   analyze-code:
@@ -15,7 +14,7 @@ jobs:
     steps:
       - name: Verificar la existencia del archivo allow_pull_request.txt
         run: |
-          ls -l   # Listar el contenido del directorio de trabajo
+          cd $GITHUB_WORKSPACE  # Cambiar al directorio raíz del repositorio
           if [ -f "allow_pull_request.txt" ]; then
             echo "El archivo allow_pull_request.txt existe"
           else
@@ -23,7 +22,6 @@ jobs:
             ls -l   # Listar el contenido del directorio de trabajo para verificar si el archivo está presente
             exit 1
           fi
-
       - name: Pruebas de SAST
         run: echo "Ejecución de pruebas de SAST"
 
@@ -34,4 +32,6 @@ jobs:
           else
             echo "Build fallida. Impidiendo Pull Request"
             exit 1
+          fi
+
           fi
