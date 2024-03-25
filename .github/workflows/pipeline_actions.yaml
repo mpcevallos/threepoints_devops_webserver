@@ -13,7 +13,7 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
     steps:
-    - name: Verificar branch
+    - name: Verificar branch master
       uses: actions/checkout@master
     - name: envsubst-action
       uses: nowactions/envsubst@v1
@@ -27,12 +27,14 @@ jobs:
         export USERNAME=${USERNAME}
         export PASSWORD=${PASSWORD}
         envsubst < credentials.ini.tpl > /tmp/credentials.ini
+    - name: Verificar estado del repositorio
+      run: git status
     - name: Hacer git add y confirmar los cambios
       run: |
         git config --global user.email "mpcevallos@gmail.com"
         git config --global user.name "mpcevallos"
-        git add credentials.ini
-        git commit -m "Add credentials.ini"
+        git add .
+        git commit -m "Add credentials.ini y otros cambios"
         git push origin HEAD:${GITHUB_REF#refs/heads/}
     - name: Build docker image
       run: |
