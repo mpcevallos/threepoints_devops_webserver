@@ -3,37 +3,37 @@ name: continous-integration-mariapaula_cevallos.yml
 on:
   push:
     branches:
-      - master
-      - 'feature*'
-      - 'hotfix*'
+    - master
+    - 'feature*'
+    - 'hotfix*'
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      USERNAME: ${{ secrets.USERNAME }}
-      PASSWORD: ${{ secrets.PASSWORD }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
     steps:
-      - name: Verificar branch master
-        uses: actions/checkout@master
-      - name: envsubst-action
-        uses: nowactions/envsubst@v1
-        with:
-          input: ./credentials.ini.tpl
-          output: ./credentials.ini
-      - name: Pruebas de SAST
-        run: echo "Ejecución de pruebas de SAST"
-      - name: Crear el archivo de credenciales
-        run: |
-          export USERNAME=${USERNAME}
-          export PASSWORD=${PASSWORD}
-          envsubst < credentials.ini.tpl > /tmp/credentials.ini
-      - name: Hacer git add y confirmar los cambios
-        run: |
-          git config --global user.email "mpcevallos@gmail.com"
-          git config --global user.name "mpcevallos"
-          git add credentials.ini
-          git commit -m "Add credentials.ini"
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
-      - name: Build docker image
-        run: |
-          docker build -t devops_ws . --tag devops_ws_$(date +%s)
+    - name: Verificar branch master
+      uses: actions/checkout@master
+    - name: envsubst-action
+      uses: nowactions/envsubst@v1
+      with:
+        input: ./credentials.ini.tpl
+        output: ./credentials.ini
+    - name: Pruebas de SAST
+      run: echo "Ejecución de pruebas de SAST"
+    - name: Crear el archivo de credenciales
+      run: |
+        export USERNAME=${USERNAME}
+        export PASSWORD=${PASSWORD}
+        envsubst < credentials.ini.tpl > /tmp/credentials.ini
+    - name: Hacer git add y confirmar los cambios
+      run: |
+        git config --global user.email "mpcevallos@gmail.com"
+        git config --global user.name "mpcevallos"
+        git add credentials.ini
+        git commit -m "Add credentials.ini"
+        git push origin HEAD:${GITHUB_REF#refs/heads/}
+    - name: Build docker image
+      run: |
+        docker build -t devops_ws . --tag devops_ws_$(date +%s)
