@@ -1,4 +1,4 @@
-name: ci-mariapaula_cevallos-pull-request
+name: allow-pull-request
 
 on:
   pull_request:
