@@ -3,6 +3,11 @@ name: allow-pull-request.yml
 on:
   pull_request:
     types: [opened, synchronize]
+    branches:
+      - master
+      - develop
+      - feature*
+      - hotfix*
 
 jobs:
   analyze-code:
