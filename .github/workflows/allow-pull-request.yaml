@@ -3,24 +3,20 @@ name: allow-pull-request.yml
 on:
   pull_request:
     types: [opened, synchronize]
-    branches:
-      - master
-      - develop
-      - feature*
-      - hotfix*
 
 jobs:
   analyze-code:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Verificar Pull Request permitido o no
+      - name: Verificar la existencia del archivo allow_pull_request.txt
         run: |
+          ls -l   # Listar el contenido del directorio de trabajo
           if [ -f "allow_pull_request.txt" ]; then
-            echo "allow_pull=true" >> $GITHUB_ENV
+            echo "El archivo allow_pull_request.txt existe"
           else
-            echo "allow_pull=false" >> $GITHUB_ENV
-            echo "Impidiendo Pull Request"
+            echo "El archivo allow_pull_request.txt no existe"
+            ls -l   # Listar el contenido del directorio de trabajo para verificar si el archivo está presente
             exit 1
           fi
 
