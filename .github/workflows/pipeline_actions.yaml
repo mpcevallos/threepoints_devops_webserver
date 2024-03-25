@@ -27,8 +27,6 @@ jobs:
         export USERNAME=${USERNAME}
         export PASSWORD=${PASSWORD}
         envsubst < credentials.ini.tpl > /tmp/credentials.ini
-    - name: Verificar estado del repositorio
-      run: git status
     - name: Hacer git add y confirmar los cambios
       run: |
         git config --global user.email "mpcevallos@gmail.com"
