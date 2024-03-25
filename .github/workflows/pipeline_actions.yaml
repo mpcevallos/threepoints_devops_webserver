@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - 'feature*'
+      - 'hotfix*'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,10 +33,7 @@ jobs:
           git config --global user.name "mpcevallos"
           git add credentials.ini
           git commit -m "Add credentials.ini"
-      - name: Git Push de los cambios
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
       - name: Build docker image
         run: |
           docker build -t devops_ws . --tag devops_ws_$(date +%s)
