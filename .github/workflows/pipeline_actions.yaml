@@ -13,7 +13,7 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
     steps:
-    - name: Verificar branch master
+    - name: Verificar branch
       uses: actions/checkout@master
     - name: envsubst-action
       uses: nowactions/envsubst@v1
