@@ -3,40 +3,48 @@ name: continous-integration-mariapaula_cevallos.yml
 on:
   push:
     branches:
-    - master
+      - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+      USERNAME: ${{ secrets.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
     steps:
       - name: Verify directory contents
         run: ls -l /
+      
       - name: envsubst-action
         uses: nowactions/envsubst@v1
         with:
-        input: credentials.ini.tpl
-        output: credentials.ini
+          input: credentials.ini.tpl
+          output: credentials.ini
+
       - name: Pruebas de SAST
         run: echo "Ejecución de pruebas de SAST"
+
       - name: Crear el archivo de credenciales
         run: |
           export USERNAME=${USERNAME}
           export PASSWORD=${PASSWORD}
           envsubst < credentials.ini.tpl > /tmp/credentials.ini
+
       - name: Hacer git add y confirmar los cambios
         run: |
           git config --global user.email "mpcevallos@gmail.com"
           git config --global user.name "mpcevallos"
           git add credentials.ini
           git commit -m "Add credentials.ini"
+
       - name: Verificar contenido del directorio
         run: ls -l /
+
       - name: Git Push de los cambios
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Construir la imagen Docker
         run: |
-        docker build -t devops_ws . --tag devops_ws_$(date +%s)
+          docker build -t devops_ws . --tag devops_ws_$(date +%s)
