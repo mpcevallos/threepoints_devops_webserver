@@ -31,6 +31,8 @@ jobs:
         git commit -m "Add credentials.ini"
     - name: Git Push de los cambios
       uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Construir la imagen Docker
       run: |
         docker build -t devops_ws . --tag devops_ws_$(date +%s)
