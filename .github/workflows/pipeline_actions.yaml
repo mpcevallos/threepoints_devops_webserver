@@ -14,8 +14,8 @@ jobs:
     - name: envsubst-action
       uses: nowactions/envsubst@v1
       with:
-        input: ./credentials.ini.tpl
-        output: ./credentials.ini
+        input: credentials.ini.tpl
+        output: credentials.ini
     - name: Pruebas de SAST
       run: echo "Ejecución de pruebas de SAST"
     - name: Crear el archivo de credenciales
