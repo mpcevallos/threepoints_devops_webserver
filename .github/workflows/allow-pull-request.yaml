@@ -4,8 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize]
     branches:
-      - 'feature-*'
-      - 'hotfix-*'
+      - 'feature*'
+      - 'hotfix*'
 
 jobs:
   analyze-code:
