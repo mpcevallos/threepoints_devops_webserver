@@ -1,3 +1,0 @@
-allow_pull_request.txt
-allow_pull_request.txt
-allow_pull_request.txt
